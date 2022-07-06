@@ -57,9 +57,12 @@ let state = {
   // Q: What breweries do we need to display? state.breweries
   
   function getBreweriesForState () {
-    // find breweries in this state
-    // put them in state
-    // rerender
+   fetch ('ttps://api.openbrewerydb.org/breweries?by_state ${state.USState}')
+   .then(resp => resp.json())
+   .then(breweries =>{
+    state.breweries = breweries
+    render()
+   })
   }
   
   function renderHeader () {
@@ -70,6 +73,37 @@ let state = {
     //     <input id="search-breweries" name="search-breweries" type="text" />
     //   </form>
     // </header>
+
+    let mainEl = document.createElement('main')
+    if (mainEl === null) return
+
+    let titelEl = document.createElement('h1')
+    titelEl.textContent = 'List of Breweries'
+
+    let searchBarHeader = document.createElement('header')
+    searchBarHeader.className = 'search-bar'
+
+    let searchBrewriesForm = document.createElement('form')
+    searchBrewriesForm.id = 'search-breweries-form'
+    searchBrewriesForm.autocomplete = 'off'
+
+    let searchBrewriesLabel = document.createElement('lebel')
+    searchBrewriesLabel.htmlFor = 'search-breweries' 
+    
+
+    let searchBrewriesH2 = document.createElement('h2')
+    searchBrewriesH2.textContent = 'Search breweries'
+
+    let searchBrewriesInput = document.createElement('input')
+    searchBrewriesInput.id = 'search-breweries'
+    searchBrewriesInput.name = 'search-breweries'
+    searchBrewriesInput.type = 'text'
+    
+    searchBrewriesLabel.append(searchBrewriesH2)
+    searchBrewriesForm.append(searchBrewriesLabel, searchBrewriesInput)
+    searchBarHeader.append(searchBrewriesForm)
+
+    mainEl.append(titelEl, searchBrewriesForm)
   }
   
   function renderBreweryList () {
@@ -78,8 +112,14 @@ let state = {
     //   </ul>
     // </article>
 
+    
+    let mainEl = document.createElement('main')
+    if (mainEl === null) return
+
     let articleEl = document.createElement('article')
+
     let breweriesListUl = document.createElement('ul')
+    breweriesListUl.className = 'breweries-list'
   }
   
   function renderSingleBrewery () {
@@ -100,17 +140,39 @@ let state = {
     //       </section>
     //     </li>
     let singelBreweryLi = document.createElement('li')
+
     let h2Li = document.createElement('h2')
+    h2Li.textContent = 'Snow Belt Brew'
+
     let divLi = document.createElement('div')
+    divLi.className = 'type'
+    divLi.textContent = 'micro'
+
+
     let addressSectionLi = document.createElement('section')
+    addressSectionLi.className = 'addres'
+
     let h3Seciton = document.createElement('h3')
+    h3Seciton.textContent = 'Address'
+
     let numberRdSection = document.createElement('p')
+    numberRdSection.textContent = 'brewery.street'
+
     let strongSection = document.createElement('p')
+
+    let strongP = document.createElement('strong')
+
     let phoneLi = document.createElement('section')
+
     let phoneSection = document.createElement('h3')
+
     let pSection = document.createElement('p')
+
     let websiteSectionLi = document.createElement('section')
+
     let aSection = document.createElement('a')
+
+    singelBreweryLi.append()
 
 
     
@@ -132,7 +194,9 @@ let state = {
       let USState = formEl['select-state'].value
       state.USState = USState
       getBreweriesForState()
+      
     })
   }
   
   listenToSelectStateForm()
+  render()
