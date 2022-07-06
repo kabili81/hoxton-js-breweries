@@ -1,51 +1,27 @@
-
 type Brewery = {
-    address_2: null;
-    address_3: null;
-    brewery_type: string;
-    city: string;
-    country: string;
-    county_province: null;
-    created_at: string;
-    id: number;
-    latitude: string;
-    longitude: string;
+    id: string;
     name: string;
-    obdb_id: string;
-    phone: string;
-    postal_code: string;
+    brewery_type: string;
+    street: string | null;
+    address_2: string | null;
+    address_3: string | null;
+    city: string;
     state: string;
-    street: string;
+    county_province: string | null;
+    postal_code: string;
+    country: string;
+    longitude: string | null;
+    latitude: string | null;
+    phone: string | null;
+    website_url: string | null;
     updated_at: string;
-    website_url: string;
+    created_at: string;
 }
 
-const breweries = [
-    {
-      address_2: null,
-      address_3: null,
-      brewery_type: 'large',
-      city: 'San Diego',
-      country: 'United States',
-      county_province: null,
-      created_at: '2018-07-24T00:00:00.000Z',
-      id: 8041,
-      latitude: '32.714813',
-      longitude: '-117.129593',
-      name: '10 Barrel Brewing Co',
-      obdb_id: '10-barrel-brewing-co-san-diego',
-      phone: '6195782311',
-      postal_code: '92101-6618',
-      state: 'California',
-      street: '1501 E St',
-      updated_at: '2018-08-23T00:00:00.000Z',
-      website_url: 'http://10barrel.com'
-    }
-  ]
 
   type State = {
     USState: string,
-    Breweries: Brewery[]
+    breweries: Brewery[]
   }
   
 let state = {
@@ -57,7 +33,7 @@ let state = {
   // Q: What breweries do we need to display? state.breweries
   
   function getBreweriesForState () {
-   fetch ('ttps://api.openbrewerydb.org/breweries?by_state ${state.USState}')
+   fetch (`https://api.openbrewerydb.org/breweries?by_name=cooper&per_page=3 ${state.USState}`)
    .then(resp => resp.json())
    .then(breweries =>{
     state.breweries = breweries
@@ -66,14 +42,7 @@ let state = {
   }
   
   function renderHeader () {
-    // <h1>List of Breweries</h1>
-    // <header class="search-bar">
-    //   <form id="search-breweries-form" autocomplete="off">
-    //     <label for="search-breweries"><h2>Search breweries:</h2></label>
-    //     <input id="search-breweries" name="search-breweries" type="text" />
-    //   </form>
-    // </header>
-
+    
     let mainEl = document.createElement('main')
     if (mainEl === null) return
 
@@ -107,74 +76,87 @@ let state = {
   }
   
   function renderBreweryList () {
-    // <article>
-    //   <ul class="breweries-list">
-    //   </ul>
-    // </article>
-
-    
+   
     let mainEl = document.createElement('main')
     if (mainEl === null) return
 
     let articleEl = document.createElement('article')
 
-    let breweriesListUl = document.createElement('ul')
-    breweriesListUl.className = 'breweries-list'
+    let breweriesUl = document.createElement('ul')
+    breweriesUl.className = 'breweries-list'
+
+    for (let brewery of state.breweries)
+    renderSingleBrewery( brewery, breweriesUl)
+
+    articleEl.append(breweriesUl)
+    mainEl.append(articleEl)
   }
   
-  function renderSingleBrewery () {
-    //     <li>
-    //       <h2>Snow Belt Brew</h2>
-    //       <div class="type">micro</div>
-    //       <section class="address">
-    //         <h3>Address:</h3>
-    //         <p>9511 Kile Rd</p>
-    //         <p><strong>Chardon, 44024</strong></p>
-    //       </section>
-    //       <section class="phone">
-    //         <h3>Phone:</h3>
-    //         <p>N/A</p>
-    //       </section>
-    //       <section class="link">
-    //         <a href="null" target="_blank">Visit Website</a>
-    //       </section>
-    //     </li>
+  function renderSingleBrewery (brewery: Brewery,breweriesUl: HTMLUListElement) {
+   
     let singelBreweryLi = document.createElement('li')
 
     let h2Li = document.createElement('h2')
-    h2Li.textContent = 'Snow Belt Brew'
+    h2Li.textContent = brewery.name
 
     let divLi = document.createElement('div')
     divLi.className = 'type'
-    divLi.textContent = 'micro'
+    divLi.textContent = brewery.brewery_type
 
 
     let addressSectionLi = document.createElement('section')
-    addressSectionLi.className = 'addres'
+    addressSectionLi.className = 'address'
 
     let h3Seciton = document.createElement('h3')
     h3Seciton.textContent = 'Address'
 
     let numberRdSection = document.createElement('p')
-    numberRdSection.textContent = 'brewery.street'
+    numberRdSection.textContent = brewery.street
 
     let strongSection = document.createElement('p')
 
     let strongP = document.createElement('strong')
+    strongP.textContent = `${brewery.city}, ${brewery.postal_code}`
 
     let phoneLi = document.createElement('section')
+    phoneLi.className = 'phone'
 
     let phoneSection = document.createElement('h3')
+    phoneSection.textContent = 'Phone'
 
     let pSection = document.createElement('p')
+    pSection.textContent = brewery.phone ? brewery.phone : "N/A"
 
     let websiteSectionLi = document.createElement('section')
+    websiteSectionLi.className = 'link'
 
     let aSection = document.createElement('a')
+    if (brewery.website_url) {
+        aSection.href = brewery.website_url ? brewery.website_url : '#'
+    aSection.target = 'blank'
+    aSection.textContent = 'Visit website'
+    } else {
+        aSection.textContent = 'No website'
+    }
+    
 
-    singelBreweryLi.append()
+    singelBreweryLi.append(
+        h2Li,
+        divLi,
+        addressSectionLi,
+        phoneLi,
+        websiteSectionLi
+    )
 
-
+    addressSectionLi.append(
+        h3Seciton,
+        numberRdSection,
+        strongSection
+    )
+    strongSection.append(strongP)
+    phoneLi.append(phoneSection, pSection)
+    websiteSectionLi.append(aSection)
+    
     
   }
   
