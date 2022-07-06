@@ -43,7 +43,7 @@ let state = {
   
   function renderHeader () {
     
-    let mainEl = document.createElement('main')
+    let mainEl = document.querySelector('main')
     if (mainEl === null) return
 
     let titelEl = document.createElement('h1')
@@ -77,7 +77,7 @@ let state = {
   
   function renderBreweryList () {
    
-    let mainEl = document.createElement('main')
+    let mainEl = document.querySelector('main')
     if (mainEl === null) return
 
     let articleEl = document.createElement('article')
@@ -157,6 +157,7 @@ let state = {
     phoneLi.append(phoneSection, pSection)
     websiteSectionLi.append(aSection)
     
+    breweriesUl.append(singelBreweryLi)
     
   }
   
