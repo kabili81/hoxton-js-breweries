@@ -33,7 +33,7 @@ let state = {
   // Q: What breweries do we need to display? state.breweries
   
   function getBreweriesForState () {
-   fetch (`https://api.openbrewerydb.org/breweries?by_name=cooper&per_page=3 ${state.USState}`)
+   fetch (`https://api.openbrewerydb.org/breweries?by_state ${state.USState}`)
    .then(resp => resp.json())
    .then(breweries =>{
     state.breweries = breweries
